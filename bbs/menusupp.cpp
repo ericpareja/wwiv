@@ -266,6 +266,8 @@ void LastCallers() {
   const char filler_char = okansi() ? '\xCD' : '=';
   bout << "|#7" << string(79, filler_char) << wwiv::endl;
   printfile(LASTON_TXT);
+  bout.nl(2);
+  pausescr();
 }
 
 void ReadEMail() {

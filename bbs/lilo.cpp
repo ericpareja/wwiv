@@ -534,35 +534,6 @@ static void UpdateLastOnFile() {
     lines = laston_file.ReadFileIntoVector();
   }
 
-  if (!lines.empty()) {
-    bool needs_header = true;
-    for (const auto& line : lines) {
-      if (line.empty()) {
-        continue;
-      }
-      if (needs_header) {
-        bout.nl(2);
-        bout << "|#1Last few callers|#7: |#0";
-        bout.nl(2);
-        if (a()->HasConfigFlag(OP_FLAGS_SHOW_CITY_ST) &&
-            (a()->config()->sysconfig_flags() & sysconfig_extended_info)) {
-          bout << "|#2Number Name/Handle               Time  Date  City            ST Cty Speed    ##" << wwiv::endl;
-        } else {
-          bout << "|#2Number Name/Handle               Language   Time  Date  Speed                ##" << wwiv::endl;
-        }
-        char chLine = (okansi()) ? static_cast<char>('\xCD') : '=';
-        bout << "|#7" << std::string(79, chLine) << wwiv::endl;
-        needs_header = false;
-      }
-      bout << line << wwiv::endl;
-      if (checka()) {
-        break;
-      }
-    }
-    bout.nl(2);
-    pausescr();
-  }
-
   auto status = a()->status_manager()->GetStatus();
   {
     const string username_num = a()->names()->UserName(a()->usernum);
@@ -847,6 +818,7 @@ void logon() {
   FixUserLinesAndColors();
   UpdateUserStatsForLogin();
   PrintLogonFile();
+  LastCallers();
   UpdateLastOnFile();
   PrintUserSpecificFiles();
 
