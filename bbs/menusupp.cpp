@@ -257,6 +257,9 @@ void KillEMail() {
 }
 
 void LastCallers() {
+  if (a()->user()->IsUseClearScreen()) bout.cls();
+  bout << "|#7\xB3|#1Last few callers to |#5" << a()->config()->config()->systemname << std::string(57-strlen(a()->config()->config()->systemname),' ') << "|#7\xB3" << wwiv::endl;
+
   if (a()->HasConfigFlag(OP_FLAGS_SHOW_CITY_ST) &&
       (a()->config()->sysconfig_flags() & sysconfig_extended_info)) {
     bout << "|#2Number Name/Handle               Time  Date  City            ST Cty Modem    ##\r\n";
@@ -266,8 +269,21 @@ void LastCallers() {
   const char filler_char = okansi() ? '\xCD' : '=';
   bout << "|#7" << string(79, filler_char) << wwiv::endl;
   printfile(LASTON_TXT);
-  bout.nl(2);
+  bout << "|#7" << string(79, filler_char) << wwiv::endl;
+  bout.nl();
   pausescr();
+
+  // InterBBS Last Callers MOD
+  for (const auto& n : a()->nets().networks()) {
+    char s1[180];
+    sprintf(s1, "%slaston.txt", n.dir.c_str());
+    if (File::Exists(s1)) {
+        printfile(s1);
+        pausescr();
+      }
+    }
+   // InterBBS code ends here
+
 }
 
 void ReadEMail() {
